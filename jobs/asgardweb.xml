@@ -1,0 +1,129 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.31">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <com.coravy.hudson.plugins.github.GithubProjectProperty plugin="github@1.29.3">
+      <projectUrl>https://github.com/rync/jenkins2-test.git/</projectUrl>
+      <displayName></displayName>
+    </com.coravy.hudson.plugins.github.GithubProjectProperty>
+    <com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.5.11">
+      <gitLabConnection></gitLabConnection>
+    </com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>dockerhubuser</name>
+          <description></description>
+          <defaultValue>rhizapull</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>dockerhubpass</name>
+          <description></description>
+          <defaultValue>PASSWORD</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>vault_github_token</name>
+          <description></description>
+          <defaultValue>VAULT_TOKEN</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>environment</name>
+          <description></description>
+          <defaultValue>r513testgreen</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers>
+        <com.dabsquared.gitlabjenkins.GitLabPushTrigger plugin="gitlab-plugin@1.5.11">
+          <spec></spec>
+          <triggerOnPush>true</triggerOnPush>
+          <triggerOnMergeRequest>true</triggerOnMergeRequest>
+          <triggerOnPipelineEvent>false</triggerOnPipelineEvent>
+          <triggerOnAcceptedMergeRequest>true</triggerOnAcceptedMergeRequest>
+          <triggerOnClosedMergeRequest>true</triggerOnClosedMergeRequest>
+          <triggerOnApprovedMergeRequest>true</triggerOnApprovedMergeRequest>
+          <triggerOpenMergeRequestOnPush>both</triggerOpenMergeRequestOnPush>
+          <triggerOnNoteRequest>true</triggerOnNoteRequest>
+          <noteRegex>rebuild</noteRegex>
+          <ciSkip>true</ciSkip>
+          <skipWorkInProgressMergeRequest>true</skipWorkInProgressMergeRequest>
+          <setBuildDescription>true</setBuildDescription>
+          <branchFilterType>All</branchFilterType>
+          <includeBranchesSpec></includeBranchesSpec>
+          <excludeBranchesSpec></excludeBranchesSpec>
+          <sourceBranchRegex></sourceBranchRegex>
+          <targetBranchRegex></targetBranchRegex>
+          <secretToken>{AQAAABAAAAAQX6XxDU2t3iBvqMYQ6UbSjqRwC42aYI4dbbsAtKBM+hE=}</secretToken>
+          <pendingBuildName></pendingBuildName>
+          <cancelPendingBuildsOnUpdate>false</cancelPendingBuildsOnUpdate>
+        </com.dabsquared.gitlabjenkins.GitLabPushTrigger>
+        <org.jenkinsci.plugins.github.pullrequest.GitHubPRTrigger plugin="github-pullrequest@0.2.4">
+          <spec>H/1 * * * *</spec>
+          <triggerMode>CRON</triggerMode>
+          <cancelQueued>false</cancelQueued>
+          <abortRunning>false</abortRunning>
+          <skipFirstRun>false</skipFirstRun>
+          <repoProviders>
+            <com.github.kostyasha.github.integration.generic.repoprovider.GitHubPluginRepoProvider>
+              <cacheConnection>true</cacheConnection>
+              <manageHooks>true</manageHooks>
+              <repoPermission>ADMIN</repoPermission>
+            </com.github.kostyasha.github.integration.generic.repoprovider.GitHubPluginRepoProvider>
+          </repoProviders>
+          <errorsAction>
+            <description>GitHub Pull Requests Trigger Errors</description>
+            <errors class="java.util.Collections$SynchronizedSet" serialization="custom">
+              <java.util.Collections_-SynchronizedCollection>
+                <default>
+                  <c class="set">
+                    <com.github.kostyasha.github.integration.generic.errors.impl.GitHubRepoProviderError>
+                      <description>Can&apos;t find repo provider for asgardweb.&lt;br/&gt; All providers failed: [org.jenkinsci.plugins.github.internal.GHPluginConfigException: GitHubPluginRepoProvider can&apos;t find appropriate client for github repo &lt;GitHubRepositoryName[host=github.com,username=rync,repository=jenkins2-test.git]&gt;. Probably you didn&apos;t configure &apos;GitHub Plugin&apos; global &apos;GitHub Server Settings&apos; or there is no tokenswith ADMIN access to this repository.]</description>
+                    </com.github.kostyasha.github.integration.generic.errors.impl.GitHubRepoProviderError>
+                  </c>
+                  <mutex class="java.util.Collections$SynchronizedSet" reference="../../.."/>
+                </default>
+              </java.util.Collections_-SynchronizedCollection>
+            </errors>
+          </errorsAction>
+          <events>
+            <org.jenkinsci.plugins.github.pullrequest.events.impl.GitHubPROpenEvent/>
+            <org.jenkinsci.plugins.github.pullrequest.events.impl.GitHubPRCommitEvent/>
+            <org.jenkinsci.plugins.github.pullrequest.events.impl.GitHubPRCloseEvent/>
+          </events>
+          <preStatus>true</preStatus>
+        </org.jenkinsci.plugins.github.pullrequest.GitHubPRTrigger>
+      </triggers>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsScmFlowDefinition" plugin="workflow-cps@2.61">
+    <scm class="hudson.plugins.git.GitSCM" plugin="git@3.9.1">
+      <configVersion>2</configVersion>
+      <userRemoteConfigs>
+        <hudson.plugins.git.UserRemoteConfig>
+          <name>origin</name>
+          <refspec>+refs/pull/*:refs/remotes/origin/pr/*</refspec>
+          <url>https://github.com/rync/jenkins2-test.git</url>
+        </hudson.plugins.git.UserRemoteConfig>
+      </userRemoteConfigs>
+      <branches>
+        <hudson.plugins.git.BranchSpec>
+          <name>*/*</name>
+        </hudson.plugins.git.BranchSpec>
+      </branches>
+      <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+      <submoduleCfg class="list"/>
+      <extensions/>
+    </scm>
+    <scriptPath>./Jenkinsfile</scriptPath>
+    <lightweight>true</lightweight>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
